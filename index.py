@@ -93,9 +93,11 @@ def calculateTermIndices(term_weights, term_count_in_corpus, inverse_document_fr
         os.makedirs(output_directory)
 
     postingsfile_start_position = 1
+    # sort the terms alphabetically. We need the dictionary file to be sorted alphabetically
+    sorted_terms = sorted(inverse_document_frequency)
     with open(os.path.join(output_directory, 'dictionary.txt'), 'w') as dictionary_file:
         with open(os.path.join(output_directory, 'postings.txt'), 'w') as postings_file:
-            for term, count in inverse_document_frequency.iteritems():
+            for term in sorted_terms:
                 if term_count_in_corpus[term] == 1:
                     continue
                 # write to dictionary file by reading term and its occurence in the corpus
@@ -105,7 +107,7 @@ def calculateTermIndices(term_weights, term_count_in_corpus, inverse_document_fr
                 # find the term in all the documents and write its weight in postings file
                 for filename, term_dict in term_weights.iteritems():
                     if term_dict.has_key(term):
-                        postings_file.write(filename + ',' + str(term_dict[term]) + '\n')
+                        postings_file.write(filename + ',' + str(format(term_dict[term],'.5f')) + '\n')
 
 
 def main():
